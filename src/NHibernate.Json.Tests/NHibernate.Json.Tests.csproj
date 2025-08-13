@@ -25,4 +25,9 @@
     <ProjectReference Include="..\NHibernate.Json\NHibernate.Json.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="runtimes/**/native/*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

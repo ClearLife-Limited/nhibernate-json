@@ -1,4 +1,4 @@
-on: ["push", "pull_request"]
+on: [push, pull_request]
 
 name: Run Tests
 
@@ -10,12 +10,18 @@ jobs:
         dotnet: ['9.0']
     steps:
     - uses: actions/checkout@v4
+
+    - name: Install SQLite native libraries
+      run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
+
     - name: Setup dotnet
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ matrix.dotnet }}
-    - id: test
+
+    - name: Run tests
       run: |
         cd src
+        mkdir -p output
         dotnet test --collect:"XPlat Code Coverage" -r output
-        echo "::set-output name=COVERAGE_FILE::$(find output -name '*.xml')"
+        echo "COVERAGE_FILE=$(find output -name '*.xml')" >> $GITHUB_ENV
