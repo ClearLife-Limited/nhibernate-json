@@ -5,23 +5,38 @@ name: Run Tests
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet: ['9.0']
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Install SQLite native libraries
-      run: sudo apt-get update && sudo apt-get install -y libsqlite3-dev
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.x.x'
 
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ matrix.dotnet }}
+      - name: Restore dependencies
+        run: dotnet restore src/NHibernate.Json.Tests/NHibernate.Json.Tests.csproj
 
-    - name: Run tests
-      run: |
-        cd src
-        mkdir -p output
-        dotnet test --collect:"XPlat Code Coverage" -r output
-        echo "COVERAGE_FILE=$(find output -name '*.xml')" >> $GITHUB_ENV
+      - name: Build the project
+        run: dotnet build src/NHibernate.Json.Tests/NHibernate.Json.Tests.csproj --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test src/NHibernate.Json.Tests/NHibernate.Json.Tests.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=tests.trx" --results-directory TestResults
+
+      - name: Upload test results artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+          if-no-files-found: warn
+
+      - name: Publish Test Report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: .NET Tests
+          path: TestResults/*.trx
+          reporter: dotnet-trx
+          fail-on-error: false
+
