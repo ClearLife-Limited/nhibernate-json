@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <Authors>Viostream</Authors>
     <RepositoryUrl>https://github.com/Viostream/nhibernate-json</RepositoryUrl>
     <Description>NHibernate Json column is a custom column mapping that allows you to store complex models as Json in a sql column, with optional and configurable text compression.</Description>
@@ -12,7 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NHibernate" Version="5.*" />
   </ItemGroup>
 </Project>
