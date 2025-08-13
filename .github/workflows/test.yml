@@ -35,12 +35,3 @@ jobs:
           path: TestResults
           if-no-files-found: warn
 
-      - name: Publish Test Report
-        if: always()
-        uses: dorny/test-reporter@v1
-        with:
-          name: .NET Tests
-          path: TestResults/*.trx
-          reporter: dotnet-trx
-          fail-on-error: false
-
