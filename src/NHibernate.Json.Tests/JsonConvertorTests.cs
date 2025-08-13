@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using Data;
-    using Newtonsoft.Json;
     using Util;
     using Xunit;
 
@@ -12,9 +11,9 @@
         [Fact]
         public void CanConfigureProperty()
         {
-            JsonWorker.Configure(x => x.TypeNameHandling = TypeNameHandling.None);
+            JsonWorker.Configure(x => x.AllowTrailingCommas = true);
 
-            Assert.Equal(TypeNameHandling.None, JsonWorker.Settings.TypeNameHandling);
+            Assert.True(JsonWorker.Options.AllowTrailingCommas);
         }
 
         [Fact]
